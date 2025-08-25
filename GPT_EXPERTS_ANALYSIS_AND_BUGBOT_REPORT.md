@@ -1,3 +1,57 @@
+## 🧭 主UPDATA日志入口（统一）
+
+- 档案总索引: [程序当前状态统一总档案](./程序当前状态统一总档案.md)
+- 更新规范: 每次执行任务后追加一条“updata”记录（见下方模板），并将关键日志保存到 `logs/` 目录。
+- 状态来源: 以实际代码为准（`apps/webui/src`、`config/ports.json`、`vite.config.ts` 等），结合有效文档；过期/弃用内容不再纳入。
+
+### updata · 执行记录（2025-08-25）
+- 2025-08-26 10:30 BugBot全局执行与脚本修复
+  - 改动：
+    - 修复 `tools/bugbot_global/global_bugbot_test.sh` 输出为严格JSON数组，日志改走stderr，便于上游`jq`解析。
+    - 优化测试循环：使用 `jq -c '.[]'` 安全遍历项目对象，避免字符串拼接导致的解析错误。
+  - 结果：
+    - 项目检测：在 `code/` 根检测到 6 个项目（`ai团队/docs/LiquidMetal_AlgoBoost/LiquidMetalSuite_PRO/TGR_FullStack_VisualSuite/webuiv4_personal_website`）。
+    - 全局测试：全部项目非Git仓库（无 `.git`），按设计跳过创建/触发PR流程；测试统计为成功0/失败6（因缺少项目内测试脚本）。
+    - 日志：详见 `logs/bugbot_global/global_test.log`（已包含本次执行详情）。
+  - BugBot：
+    - 检测命令：`bash tools/bugbot_global/global_bugbot_test.sh --detect-only`
+    - 测试命令：`bash tools/bugbot_global/global_bugbot_test.sh`
+  - 风险：无（脚本仅读与日志写入）；后续PR流程需Git远程。
+  - 下一步：
+    1) 如需自动PR与BugBot评论采集，请在目标项目内初始化Git并配置GitHub远程：
+       - `git init && git add . && git commit -m "init"`
+       - `git branch -M main && git remote add origin <github_repo_url> && git push -u origin main`
+       - `gh auth login` 后运行：`bash tools/bugbot_global/bugbot_auto_pipeline.sh <项目路径>`
+    2) 仅跑本地静态检测可继续使用全局脚本；更多筛选可后续加`--include`白名单。
+
+- 完成：V2文档清点与核心代码审阅（`App.tsx`、`unified.ts`、`UnifiedEventBus.ts`、`EmotionCoreManager.ts`、`ManagerRegistry.ts`）
+- 结论：
+  - 端口统一以 `config/ports.json` 为准，`vite.config.ts` 读取该配置并代理至元数据服务端口。
+  - 事件总线实行类型验证、限流与跨命名空间路由；核心管理器采用注册中心统一生命周期与健康检查。
+  - 电台模块已集成 AidjMix 技术栈桥接与监控面板，后续抽离 hooks 与 composers。
+- 后续：推进“统一路由管理/事件验证/数据流监控”等待办。
+
+### updata · 追加规范（执行必读）
+- 记录位置：本文件置顶“updata”小节 + 详细过程写入 `logs/bugbot_*.log` 或 `logs/*.md`。
+- 记录内容：
+  1) 时间戳与执行人
+  2) 本轮目标与范围
+  3) 代码编辑点（文件/函数/主要改动）
+  4) 构建/测试/运行结果（包含关键输出）
+  5) BugBot检测触发与结果摘要
+  6) 风险与回滚点
+  7) 下一步行动项
+- 模板：
+```
+### updata · <YYYY-MM-DD HH:mm>
+- 目标：<一句话>
+- 改动：<文件/要点>
+- 结果：<构建/测试/运行要点>
+- BugBot：<触发命令/结果摘要>
+- 风险：<可选>
+- 下一步：<清单>
+```
+
 ### updata · VisualizationEffectManager 直读 pipeline（2025-08-24 深夜）
 ### updata · 文档与迁移（2025-08-24 深夜）
 - README：新增 EmotionCoreManager 介绍、统一事件/配置规范与 FeatureFlag；
@@ -616,3 +670,9 @@ const emergencyRollback = () => {
 **预计完成时间**: 2025-01-27
 **风险评估**: 低风险（具备完整退路）
 **架构影响**: 0侵入，无破坏性变更
+
+### updata · BugBot合并摘要（2025-08-26）
+- PR: chore(bugbot): auto trigger at 20250826015923
+- 链接: https://github.com/yutianyu111602-glitch/personal-website-v2/pull/2
+- 结论: Cursor Bugbot 审查通过，未发现问题；检查状态均通过，无与基线冲突，已合并。
+- 备注: Bugbot free trial 提示存在；如需进一步建议，可在下一次提交中引入更大覆盖面的测试样例。
