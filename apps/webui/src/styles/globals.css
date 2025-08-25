@@ -1,0 +1,615 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 14px;
+  --font-heading: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+  --font-chinese: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --background: #ffffff;
+  --foreground: oklch(0.145 0 0);
+  --card: #ffffff;
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #030213;
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.95 0.0058 264.53);
+  --secondary-foreground: #030213;
+  --muted: #ececf0;
+  --muted-foreground: #717182;
+  --accent: #e9ebef;
+  --accent-foreground: #030213;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, 0.1);
+  --input: transparent;
+  --input-background: #f3f3f5;
+  --switch-background: #cbced4;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: #030213;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  
+  /* 银色主题核心色彩系统 - v4.0 优化版本 */
+  --silver-primary: #c0c5ce;   /* 银色主调1 - 高级银金属色 */
+  --silver-secondary: #a8b2c4; /* 银色主调2 - 液态铬银色 */
+  --silver-tertiary: #9399a8;  /* 银色主调3 - 银雾色 */
+  
+  /* 银色透明度变体系统 - 精确计算的透明度值 */
+  --silver-primary-05: rgba(192, 197, 206, 0.05);
+  --silver-primary-10: rgba(192, 197, 206, 0.1);
+  --silver-primary-15: rgba(192, 197, 206, 0.15);
+  --silver-primary-20: rgba(192, 197, 206, 0.2);
+  --silver-primary-30: rgba(192, 197, 206, 0.3);
+  --silver-primary-40: rgba(192, 197, 206, 0.4);
+  --silver-primary-60: rgba(192, 197, 206, 0.6);
+  --silver-primary-80: rgba(192, 197, 206, 0.8);
+  
+  --silver-secondary-05: rgba(168, 178, 196, 0.05);
+  --silver-secondary-10: rgba(168, 178, 196, 0.1);
+  --silver-secondary-15: rgba(168, 178, 196, 0.15);
+  --silver-secondary-20: rgba(168, 178, 196, 0.2);
+  --silver-secondary-30: rgba(168, 178, 196, 0.3);
+  --silver-secondary-40: rgba(168, 178, 196, 0.4);
+  --silver-secondary-60: rgba(168, 178, 196, 0.6);
+  --silver-secondary-80: rgba(168, 178, 196, 0.8);
+  
+  --silver-tertiary-05: rgba(147, 153, 168, 0.05);
+  --silver-tertiary-10: rgba(147, 153, 168, 0.1);
+  --silver-tertiary-15: rgba(147, 153, 168, 0.15);
+  --silver-tertiary-20: rgba(147, 153, 168, 0.2);
+  --silver-tertiary-30: rgba(147, 153, 168, 0.3);
+  --silver-tertiary-40: rgba(147, 153, 168, 0.4);
+  --silver-tertiary-60: rgba(147, 153, 168, 0.6);
+  --silver-tertiary-80: rgba(147, 153, 168, 0.8);
+  
+  /* 银色系统光效和阴影 - 无毛玻璃版本 */
+  --silver-glow-soft: rgba(192, 197, 206, 0.25);
+  --silver-glow-medium: rgba(192, 197, 206, 0.4);
+  --silver-glow-strong: rgba(192, 197, 206, 0.6);
+  --silver-shadow-soft: rgba(0, 0, 0, 0.1);
+  --silver-shadow-medium: rgba(0, 0, 0, 0.15);
+  --silver-shadow-strong: rgba(0, 0, 0, 0.25);
+    
+  /* 状态色彩系统 - 银色主题统一 */
+  --status-dormant: var(--silver-tertiary-30);
+  --status-active: var(--silver-secondary-80);
+  --status-pulse: var(--silver-primary-60);
+  --status-error: rgba(220, 38, 38, 0.8);
+  --status-success: rgba(34, 197, 94, 0.8);
+  --status-warning: rgba(251, 191, 36, 0.8);
+    
+  /* 统一的交互色彩 */
+  --interaction-bg: var(--silver-primary-10);
+  --interaction-border: var(--silver-secondary-20);
+  --interaction-text: var(--silver-secondary-80);
+  --interaction-text-muted: var(--silver-tertiary-60);
+  --interaction-hover: var(--silver-primary-20);
+  --interaction-active: var(--silver-primary-30);
+    
+  /* 统一的深度层次 */
+  --depth-background: var(--silver-primary-05);
+  --depth-surface: var(--silver-primary-10);
+  --depth-elevated: var(--silver-primary-15);
+  --depth-floating: var(--silver-secondary-15);
+  --depth-overlay: var(--silver-secondary-20);
+}
+
+.dark {
+  --background: oklch(0.08 0 0);
+  --foreground: oklch(0.9 0.005 240);
+  --card: transparent; /* 激进修复：Card背景完全透明 */
+  --card-foreground: oklch(0.9 0.005 240);
+  --popover: oklch(0.08 0 0);
+  --popover-foreground: oklch(0.9 0.005 240);
+  --primary: oklch(0.75 0.01 240);
+  --primary-foreground: oklch(0.15 0 0);
+  --secondary: oklch(0.2 0.005 240);
+  --secondary-foreground: oklch(0.85 0.008 240);
+  --muted: oklch(0.15 0.003 240);
+  --muted-foreground: oklch(0.6 0.008 240);
+  --accent: oklch(0.25 0.006 240);
+  --accent-foreground: oklch(0.9 0.005 240);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.2 0.003 240);
+  --input: oklch(0.15 0.003 240);
+  --ring: oklch(0.5 0.01 240);
+  --chart-1: oklch(0.7 0.02 240);
+  --chart-2: oklch(0.65 0.015 250);
+  --chart-3: oklch(0.75 0.015 230);
+  --chart-4: oklch(0.8 0.01 220);
+  --chart-5: oklch(0.6 0.025 260);
+  --sidebar: oklch(0.12 0.002 240);
+  --sidebar-foreground: oklch(0.85 0.008 240);
+  --sidebar-primary: oklch(0.7 0.02 240);
+  --sidebar-primary-foreground: oklch(0.1 0 0);
+  --sidebar-accent: oklch(0.18 0.004 240);
+  --sidebar-accent-foreground: oklch(0.9 0.005 240);
+  --sidebar-border: oklch(0.2 0.003 240);
+  --sidebar-ring: oklch(0.5 0.01 240);
+  
+  /* 暗色模式下的银色主题优化 - 无毛玻璃效果 */
+  --silver-primary: #c0c5ce;
+  --silver-secondary: #a8b2c4;
+  --silver-tertiary: #9399a8;
+  
+  /* 暗色模式透明度微调 - 更好的对比度 */
+  --silver-primary-05: rgba(192, 197, 206, 0.06);
+  --silver-primary-10: rgba(192, 197, 206, 0.12);
+  --silver-primary-15: rgba(192, 197, 206, 0.18);
+  --silver-primary-20: rgba(192, 197, 206, 0.24);
+  --silver-primary-30: rgba(192, 197, 206, 0.36);
+  --silver-primary-40: rgba(192, 197, 206, 0.42);
+  --silver-primary-60: rgba(192, 197, 206, 0.64);
+  --silver-primary-80: rgba(192, 197, 206, 0.84);
+  
+  --silver-secondary-05: rgba(168, 178, 196, 0.06);
+  --silver-secondary-10: rgba(168, 178, 196, 0.12);
+  --silver-secondary-15: rgba(168, 178, 196, 0.18);
+  --silver-secondary-20: rgba(168, 178, 196, 0.24);
+  --silver-secondary-30: rgba(168, 178, 196, 0.36);
+  --silver-secondary-40: rgba(168, 178, 196, 0.42);
+  --silver-secondary-60: rgba(168, 178, 196, 0.64);
+  --silver-secondary-80: rgba(168, 178, 196, 0.84);
+  
+  --silver-tertiary-05: rgba(147, 153, 168, 0.06);
+  --silver-tertiary-10: rgba(147, 153, 168, 0.12);
+  --silver-tertiary-15: rgba(147, 153, 168, 0.18);
+  --silver-tertiary-20: rgba(147, 153, 168, 0.24);
+  --silver-tertiary-30: rgba(147, 153, 168, 0.36);
+  --silver-tertiary-40: rgba(147, 153, 168, 0.42);
+  --silver-tertiary-60: rgba(147, 153, 168, 0.64);
+  --silver-tertiary-80: rgba(147, 153, 168, 0.84);
+  
+  /* 暗色模式光效增强 - 无毛玻璃 */
+  --silver-glow-soft: rgba(192, 197, 206, 0.3);
+  --silver-glow-medium: rgba(192, 197, 206, 0.45);
+  --silver-glow-strong: rgba(192, 197, 206, 0.65);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* 银色色彩映射 */
+  --silver-50: #f8fafc;
+  --silver-100: #f1f5f9;
+  --silver-200: #e2e8f0;
+  --silver-300: #cbd5e1;
+  --silver-400: #94a3b8;
+  --silver-500: #64748b;
+  --silver-600: #475569;
+  --silver-700: #334155;
+  --silver-800: #1e293b;
+  --silver-900: #0f172a;
+  
+  /* 银色特效色彩 */
+  --silver-accent: #c7d2fe;
+  --silver-accent-dark: #a5b4fc;
+  --silver-glow: rgba(199, 210, 254, 0.3);
+  --silver-glow-strong: rgba(199, 210, 254, 0.6);
+  
+  /* 简约美学系统色彩 */
+  --void-100: #f8f9fa;
+  --void-200: #e9ecef;
+  --void-300: #dee2e6;
+  --void-400: #ced4da;
+  --void-500: #adb5bd;
+  --void-600: #6c757d;
+  --void-700: #495057;
+  --void-800: #343a40;
+  --void-900: #212529;
+  
+  /* 渐变色彩系统 */
+  --gradient-silver-primary: linear-gradient(135deg, var(--silver-primary-10) 0%, var(--silver-primary-05) 50%, var(--silver-primary-15) 100%);
+  --gradient-silver-secondary: linear-gradient(135deg, var(--silver-secondary-10) 0%, var(--silver-secondary-05) 50%, var(--silver-secondary-15) 100%);
+  --gradient-radial-silver: radial-gradient(circle, var(--silver-primary-10) 0%, var(--silver-secondary-05) 50%, transparent 100%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    background-color: #000000;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    
+    /* 统一字体规格 - 参考TaskLogger设计 */
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 400;
+    letter-spacing: 0.025em;
+  }
+  
+  /* 电台浮窗拖动优化 */
+  .radio-floating-player {
+    position: fixed !important;
+    z-index: 85 !important;
+    pointer-events: auto !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    
+    /* 确保拖动时不被选中 */
+    -webkit-user-drag: none !important;
+    -moz-user-drag: none !important;
+    -ms-user-drag: none !important;
+    user-drag: none !important;
+  }
+  
+  .radio-drag-handle {
+    cursor: grab !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+  }
+  
+  .radio-drag-handle:active,
+  .radio-drag-handle.dragging {
+    cursor: grabbing !important;
+  }
+  
+  /* 防止其他元素干扰拖动 */
+  .radio-floating-player * {
+    pointer-events: auto;
+  }
+  
+  .radio-floating-player .radio-drag-handle * {
+    pointer-events: none; /* 手柄内的元素不处理指针事件 */
+  }
+
+  /* 统一文字系统 - 基于TaskLogger的规格 */
+  .text-system-primary {
+    color: rgba(255, 255, 255, 0.9);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  
+  .text-system-secondary {
+    color: rgba(255, 255, 255, 0.7);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  
+  .text-system-tertiary {
+    color: rgba(255, 255, 255, 0.5);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  
+  .text-system-quaternary {
+    color: rgba(255, 255, 255, 0.4);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  
+  /* 标题系统 - 统一font-mono规格 */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  h1 { font-size: 18px; letter-spacing: 0.1em; }
+  h2 { font-size: 16px; letter-spacing: 0.08em; }
+  h3 { font-size: 14px; letter-spacing: 0.06em; }
+  h4 { font-size: 12px; letter-spacing: 0.05em; }
+  h5 { font-size: 11px; letter-spacing: 0.04em; }
+  h6 { font-size: 10px; letter-spacing: 0.03em; }
+  
+  /* 按钮文字统一 */
+  button, .button {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  button:hover, .button:hover {
+    color: rgba(255, 255, 255, 0.95);
+  }
+  
+  /* 输入框文字统一 */
+  input, textarea, select {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  input::placeholder, textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  
+  /* 标签文字统一 */
+  label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  /* 通用小文字 */
+  .text-small {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  /* 通用中等文字 */
+  .text-medium {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  /* 通用大文字 */
+  .text-large {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  /* 代码和数据文字 */
+  code, .code, .mono {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
+  
+  /* 状态文字 - 继承TaskLogger的规格 */
+  .status-text {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  
+  .status-active { color: rgba(255, 255, 255, 0.9); }
+  .status-inactive { color: rgba(255, 255, 255, 0.5); }
+  .status-error { color: rgba(239, 68, 68, 0.9); }
+  .status-success { color: rgba(34, 197, 94, 0.9); }
+  .status-warning { color: rgba(251, 191, 36, 0.9); }
+  
+  /* 导航和菜单文字 */
+  nav, .nav, .menu {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  
+  /* 面板标题统一 */
+  .panel-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  /* 面板内容统一 */
+  .panel-content {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  /* 键盘快捷键样式 */
+  kbd {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    padding: 2px 6px;
+  }
+  
+  /* 链接统一 */
+  a, .link {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease;
+  }
+  
+  a:hover, .link:hover {
+    color: rgba(255, 255, 255, 0.95);
+    border-bottom-color: rgba(255, 255, 255, 0.4);
+  }
+
+  /* ======================================== */
+  /* 电台Sync按钮增强样式 - 亮黄光效果     */
+  /* ======================================== */
+  
+  /* Sync按钮激活状态 - 大幅提高亮度和黄光效果 */
+  .radio-sync-active {
+    background: rgba(255, 193, 7, 0.35) !important;    /* 黄色背景，高亮度 */
+    border: 1px solid rgba(255, 193, 7, 0.5) !important; /* 黄色边框 */
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.4) !important; /* 黄色发光效果 */
+    color: rgba(255, 255, 255, 0.95) !important;         /* 文字保持白色 */
+    
+    /* 脉冲动画 - 黄光脉冲效果 */
+    animation: radioSyncPulseYellow 1.5s ease-in-out infinite !important;
+  }
+  
+  /* Sync按钮黄光脉冲动画关键帧 */
+  @keyframes radioSyncPulseYellow {
+    0%, 100% { 
+      background: rgba(255, 193, 7, 0.35);
+      border-color: rgba(255, 193, 7, 0.5);
+      box-shadow: 0 0 20px rgba(255, 193, 7, 0.4);
+      transform: scale(1);
+    }
+    50% { 
+      background: rgba(255, 193, 7, 0.55);              /* 脉冲峰值更亮的黄色 */
+      border-color: rgba(255, 193, 7, 0.7);             /* 边框峰值更亮 */
+      box-shadow: 0 0 30px rgba(255, 193, 7, 0.6);      /* 光晕更强 */
+      transform: scale(1.02);                              /* 轻微放大效果 */
+    }
+  }
+  
+  /* Sync按钮悬停时的增强效果 */
+  .radio-sync-active:hover {
+    background: rgba(255, 193, 7, 0.45) !important;
+    border-color: rgba(255, 193, 7, 0.6) !important;
+    box-shadow: 0 0 25px rgba(255, 193, 7, 0.5) !important;
+    transform: scale(1.05) translateY(-1px) !important;
+  }
+  
+  /* Sync按钮点击时的反馈 */
+  .radio-sync-active:active {
+    background: rgba(255, 193, 7, 0.65) !important;
+    border-color: rgba(255, 193, 7, 0.8) !important;
+    box-shadow: 0 0 35px rgba(255, 193, 7, 0.7) !important;
+    transform: scale(0.98) !important;
+    animation-play-state: paused !important;              /* 点击时暂停脉冲 */
+  }
+  
+  /* Sync按钮非激活状态保持原样 */
+  .radio-sync-inactive {
+    background: rgba(192, 197, 206, 0.08);
+    border: 1px solid rgba(192, 197, 206, 0.15);
+    color: rgba(192, 197, 206, 0.8);
+    transition: all 0.3s ease;
+  }
+  
+  /* Sync按钮禁用动画时的静态高亮状态 */
+  .radio-sync-static-active {
+    background: rgba(255, 193, 7, 0.4) !important;
+    border: 1px solid rgba(255, 193, 7, 0.55) !important;
+    box-shadow: 0 0 18px rgba(255, 193, 7, 0.35) !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+  }
+  
+  /* 减少动画偏好的用户 - 禁用脉冲但保持高亮 */
+  @media (prefers-reduced-motion: reduce) {
+    .radio-sync-active {
+      animation: none !important;
+      background: rgba(255, 193, 7, 0.4) !important;
+      border-color: rgba(255, 193, 7, 0.55) !important;
+      box-shadow: 0 0 18px rgba(255, 193, 7, 0.35) !important;
+    }
+  }
+}

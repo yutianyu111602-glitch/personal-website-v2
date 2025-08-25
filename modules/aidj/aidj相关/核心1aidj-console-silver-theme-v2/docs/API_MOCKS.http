@@ -1,0 +1,12 @@
+### HTTP Mocks (占位路径；端口由环境决定)
+POST /api/aidjmix/autoplaylist
+Content-Type: application/json
+
+{
+  "tracks": [],
+  "minutes": 60,
+  "beamWidth": 24,
+  "preset": "classic",
+  "simpleHeadTail": false,
+  "technique": "bass_swap"
+}

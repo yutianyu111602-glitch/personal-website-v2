@@ -1,0 +1,9 @@
+:root[data-theme='space-silver']{
+  --chrome: #c0c5ce; /* 金属银（来自你的UI） */
+  --chrome-2: #a8b2c4; /* 次银 */
+  --deep-space: #030213; /* 深空蓝黑背景 */
+  --glass-light: #ffffff1a; /* 玻璃(白) */
+  --glass-dark: #0000001a; /* 玻璃(黑) */
+  --white: #fff; --white-96: #fffffff2; --white-90:#fffc; --white-40:#fff6;
+}
+/* TODO(Cursor): 将这些变量映射到 Tailwind config 或直接作为 CSS var 使用 */ 

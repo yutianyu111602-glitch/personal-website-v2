@@ -1,0 +1,60 @@
+{
+  "version": "1.0.0",
+  "tod": [
+    {
+      "hour": [
+        0,
+        6
+      ],
+      "weights": {
+        "ambient": 0.5,
+        "stable": 0.4,
+        "experimental": 0.1
+      }
+    },
+    {
+      "hour": [
+        6,
+        9
+      ],
+      "weights": {
+        "ambient": 0.4,
+        "stable": 0.5,
+        "build": 0.1
+      }
+    },
+    {
+      "hour": [
+        9,
+        18
+      ],
+      "weights": {
+        "stable": 0.7,
+        "ambient": 0.2,
+        "experimental": 0.1
+      }
+    },
+    {
+      "hour": [
+        18,
+        22
+      ],
+      "weights": {
+        "build": 0.25,
+        "stable": 0.55,
+        "ambient": 0.2
+      }
+    },
+    {
+      "hour": [
+        22,
+        24
+      ],
+      "weights": {
+        "stable": 0.5,
+        "ambient": 0.3,
+        "experimental": 0.2
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+// 修改 src/server.ts：允许传入 preset 与 simpleHeadTail
+// const { tracks=[], minutes=60, beamWidth=24, preset='classic', simpleHeadTail=false } = req.body||{};
+// import { applyPreset } from './presets.js';
+// applyPreset(preset);
+// const plan = planTransitions(seq, true, simpleHeadTail);
+
+
+// 修改 src/transitions.ts：为函数加第三个参数 simpleHeadTail:boolean=false
+// export function planTransitions(seq: TrackFeature[], techno=true, simpleHeadTail=false): TransitionPlan { ... }
+// 若 simpleHeadTail 为真：仅设置 start/end/crossfade（不附带自动化脚本）

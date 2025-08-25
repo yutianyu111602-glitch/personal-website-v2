@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>音乐可视化 · Focus 模式切换（无弹窗）</title>
+    <meta name="description" content="点击可视化区域 → 切换背景 + 模块最小化（不弹新窗口）。" />
+  </head>
+  <body>
+    <!--
+      交互说明：
+      - 点击 #viz（可视化区域）在 Normal 与 Focus 间切换。
+      - Focus：背景切换 + 所有功能模块最小化到 Dock。
+      - Esc 键退出 Focus。
+      - 不影响音频播放，仅做 CSS class 切换。
+    -->
+    <div id="app" class="normal">
+      <header class="module header">
+        <h1>音乐可视化</h1>
+        <p>点击下方可视化区域，进入 Focus 模式（无弹窗）。</p>
+      </header>
+
+      <main>
+        <section id="viz" class="viz" aria-pressed="false" aria-label="切换 Focus 模式">
+          <!-- 你可以在这里挂载 Canvas/WebGL/Video。此处放一个占位 Canvas。 -->
+          <canvas id="vizCanvas" width="960" height="420"></canvas>
+          <div class="hint">点击或按 Esc 切换</div>
+        </section>
+      </main>
+
+      <aside class="module controls">
+        <button id="playBtn">播放/暂停</button>
+        <button id="nextBtn">下一首</button>
+        <label><input type="checkbox" id="highFPS"> 高帧率(可选)</label>
+      </aside>
+
+      <nav class="module playlist">
+        <ul>
+          <li>Track 01</li>
+          <li>Track 02</li>
+          <li>Track 03</li>
+        </ul>
+      </nav>
+
+      <div class="dock" role="toolbar" aria-label="最小化 Dock">
+        <!-- 最小化后保留的核心控件 -->
+        <button class="dock-btn" id="dockPlay">▶︎/⏸</button>
+        <button class="dock-btn" id="dockBack">返回</button>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+*** managers/original/AutoDJManager.ts	2025-08-25
+--- managers/AutoDJManager.ts	2025-08-25
+***************
+*** 1,6 ****
+  export default class AutoDJManager implements Manager {
+    readonly id = 'autodj' as const;
+  
+    private timerId: number | null = null;
+    private lastTrackKey: string | null = null;
+    private lastIndex: number | null = null;
+--- 1,10 ----
+  export default class AutoDJManager implements Manager {
+    readonly id = 'autodj' as const;
+  
+    private timerId: number | null = null;
+    private lastTrackKey: string | null = null;
+    private lastIndex: number | null = null;
++ 
++   // ★ 新增：可选的自动歌单客户端（保持接口不变，不启用也不影响）
++   private autoPlaylistClient?: { requestAutoPlaylist: (tracks:any[], minutes?:number, beamWidth?:number)=>Promise<void> };
++   bindAutoPlaylistClient(client: { requestAutoPlaylist: (tracks:any[], minutes?:number, beamWidth?:number)=>Promise<void> }) { this.autoPlaylistClient = client; }
+***************
+*** 36,41 ****
+--- 40,60 ----
+      if (typeof bpm === 'number' && Number.isFinite(bpm)) {
+        UnifiedEventBus.emitBpm(bpm);
+      }
++ 
++     // ★ 可选：当检测到播放列表即将耗尽时，触发自动歌单生成
++     //    - 你可以替换 getLibrarySubset() 为实际曲库查询
++     const remain = (st.total || 0) - (st.index || 0);
++     if (remain <= 1 && this.autoPlaylistClient) {
++       try {
++         const tracks = await this.getLibrarySubset();
++         // 为避免阻塞界面，这里不 await，也可以 await 按需改造
++         this.autoPlaylistClient.requestAutoPlaylist(tracks, 60, 24).catch(()=>{});
++       } catch {}
++     }
+    }
++ 
++   // ★ 留口：从你已有的数据源取 TrackFeature[]，字段见 INTEGRATION_GUIDE.md
++   private async getLibrarySubset(): Promise<any[]> {
++     // TODO: 替换为真实实现（搜索 Techno 标签 / BPM 124–136 / 小调优先）
++     return [];
++   }

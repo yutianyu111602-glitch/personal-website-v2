@@ -1,0 +1,7 @@
+{
+  "//": "Cursor 项目提示，可被 Agent 读取以指导重构或集成。",
+  "hints": [
+    "将 #viz 替换为 Three.js/Canvas 频谱，保留 enterFocus/exitFocus 钩子。",
+    "保持仅用 CSS class 切换视图状态，避免中断 <audio>。"
+  ]
+}

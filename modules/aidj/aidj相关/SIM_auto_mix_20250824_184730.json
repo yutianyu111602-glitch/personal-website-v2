@@ -1,0 +1,80 @@
+{
+  "items": [
+    {
+      "track": {
+        "id": "t021",
+        "title": "023. Azadî Azadî",
+        "artist": "",
+        "durationSec": 157,
+        "bpm": 128,
+        "keyCamelot": "7A",
+        "energyCurve": [
+          0.3,
+          0.45,
+          0.55,
+          0.6
+        ],
+        "downbeats": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "cueInSec": 8,
+        "cueOutSec": 147,
+        "vocality": 0.05,
+        "tags": null,
+        "path": "/Users/masher/Music/网易云音乐/我的歌单21/023. Azadî Azadî.mp3"
+      },
+      "startAt": 8,
+      "endAt": 147,
+      "stretchPct": 0.0,
+      "transposeSemitone": 0.0,
+      "crossfadeBeats": 24,
+      "automation": [
+        {
+          "type": "filter",
+          "mode": "hipass_ramp",
+          "from_hz": 80,
+          "to_hz": 260,
+          "duration_beats": 24
+        }
+      ]
+    },
+    {
+      "track": {
+        "id": "t075",
+        "title": "007. Bionic Man Solar X",
+        "artist": "",
+        "durationSec": 377,
+        "bpm": 128,
+        "keyCamelot": "7A",
+        "energyCurve": [
+          0.3,
+          0.45,
+          0.55,
+          0.6
+        ],
+        "downbeats": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "cueInSec": 8,
+        "cueOutSec": 367,
+        "vocality": 0.05,
+        "tags": null,
+        "path": "/Users/masher/Music/网易云音乐/我的歌单21/007. Bionic Man Solar X.mp3"
+      },
+      "startAt": 8,
+      "endAt": 367,
+      "stretchPct": 0.0,
+      "transposeSemitone": 0.0,
+      "crossfadeBeats": 0,
+      "automation": []
+    }
+  ],
+  "totalSec": 498,
+  "avgScore": 0.0
+}

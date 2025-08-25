@@ -1,0 +1,46 @@
+{
+  "visualizer": {
+    "overlay": {
+      "blendMode": "screen",
+      "opacity": 0.85,
+      "highFps": true
+    }
+  },
+  "layout": {
+    "focus": {
+      "organizer": { "width": 560, "height": 72 },
+      "taskLogger": { "width": 224 }
+    }
+  },
+  "featureFlags": {
+    "emotionCoreUnifiedLoop": true,
+    "enableTechniqueBridge": true
+  },
+  "emotionCore": {
+    "tickIntervalMs": 500,
+    "enableTechniqueBridge": true,
+    "conservativeDropout": 0.05
+  },
+  "aidjMix": {
+    "enableTechniqueBridge": true,
+    "enableRouterAdapter": false,
+    "enableNowPlayingMirror": true,
+    "routerConfig": {
+      "ENDPOINT_NEXT": "/api/music/next",
+      "ENDPOINT_PREV": "/api/music/previous",
+      "ENDPOINT_CROSSF": "/api/music/crossfade?duration={ms}",
+      "ENDPOINT_VOLUME": "/api/music/volume?level={v}",
+      "DEFAULT_CROSSFADE_MS": 4000,
+      "SAFETY_RATE_LIMIT_MS": 1200
+    },
+    "mirrorConfig": {
+      "NOWPLAYING_URL": "/api/nowplaying",
+      "INTERVAL_MS": 2000
+    }
+  },
+  "benchmark": {
+    "enabled": false,
+    "durationMs": 15000
+  }
+}
+

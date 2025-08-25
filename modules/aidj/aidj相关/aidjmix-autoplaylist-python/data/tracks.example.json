@@ -1,0 +1,74 @@
+[
+  {
+    "id": "track001",
+    "title": "Demo 1",
+    "artist": "Artist A",
+    "durationSec": 240,
+    "bpm": 128,
+    "keyCamelot": "8A",
+    "energyCurve": [
+      0.25,
+      0.35,
+      0.5,
+      0.55
+    ],
+    "downbeats": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "cueInSec": 8,
+    "cueOutSec": 228,
+    "vocality": 0.1,
+    "path": "/music/A/1.mp3"
+  },
+  {
+    "id": "track002",
+    "title": "Demo 2",
+    "artist": "Artist B",
+    "durationSec": 220,
+    "bpm": 126,
+    "keyCamelot": "9A",
+    "energyCurve": [
+      0.3,
+      0.45,
+      0.55,
+      0.6
+    ],
+    "downbeats": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "cueInSec": 12,
+    "cueOutSec": 210,
+    "vocality": 0.05,
+    "path": "/music/B/2.mp3"
+  },
+  {
+    "id": "track003",
+    "title": "Demo 3",
+    "artist": "Artist C",
+    "durationSec": 260,
+    "bpm": 130,
+    "keyCamelot": "8B",
+    "energyCurve": [
+      0.35,
+      0.5,
+      0.65,
+      0.7
+    ],
+    "downbeats": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "cueInSec": 10,
+    "cueOutSec": 248,
+    "vocality": 0.0,
+    "path": "/music/C/3.mp3"
+  }
+]

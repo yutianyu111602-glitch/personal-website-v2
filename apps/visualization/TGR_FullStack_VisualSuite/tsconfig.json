@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {},
+    "types": [
+      "vite/client",
+      "dom"
+    ]
+  },
+  "include": [
+    "src"
+  ]
+}

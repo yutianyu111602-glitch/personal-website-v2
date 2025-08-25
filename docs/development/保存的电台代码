@@ -1,0 +1,764 @@
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { motion } from "motion/react";
+import { getTranslations } from "./util/i18n";
+import WaveSurfer from "wavesurfer.js";
+import { UnifiedEventBus, onPlayback, onTransition } from "./components/events/UnifiedEventBus";
+
+interface TiangongRadioPlayerProps {
+  language: string;
+  syncActive?: boolean;
+  onSyncToggle?: () => void;
+  onClose?: () => void;
+  autoPlayOnMount?: boolean;
+  preloadOnly?: boolean;
+}
+
+// 音频文件接口 - 适配V2版本API路由
+interface AudioTrack {
+  id: string;
+  title: string;
+  artist: string;
+  duration: number;
+  bpm: number;
+  key?: string;
+  genre?: string;
+  path?: string;
+  type: string;
+  playCount: number;
+}
+
+// 吸附边缘枚举
+enum SnapEdge {
+  None = 'none',
+  Left = 'left',
+  Right = 'right',
+  Top = 'top',
+  Bottom = 'bottom'
+}
+
+// 吸附状态枚举
+enum SnapState {
+  Free = 'free',       // 自由状态，未吸附
+  Snapped = 'snapped', // 已吸附到边缘
+  Expanded = 'expanded' // 从吸附状态展开
+}
+
+/**
+ * 天宫电台播放器 - V2版本重构（简化版）
+ * 
+ * 核心特性：
+ * - 🎯 简化交互系统 - 用按钮替代拖拽
+ * - 🧲 智能边缘吸附 - 自动检测最近边缘
+ * - 👆 一键切换状态 - 吸附/展开/自由状态循环
+ * - 🎬 流畅动画过渡 - 状态间平滑切换
+ * - 📍 位置记忆 - 记住用户偏好位置
+ * - 🎵 基础播放功能 - 播放/暂停、音量控制、同步
+ * - 📜 滚动适配 - 吸附状态下不受页面滚动影响
+ * - 🎼 测试模式 - 硬编码音乐目录，本地测试
+ * - 🔄 事件系统集成 - 与V2版本情绪核心完全兼容
+ */
+export const TiangongRadioPlayer: React.FC<TiangongRadioPlayerProps> = ({
+  language,
+  syncActive = false,
+  onSyncToggle,
+  onClose,
+  autoPlayOnMount = false,
+  preloadOnly = false
+}) => {
+  // 🎯 位置和状态管理
+  const [position, setPosition] = useState({
+    x: 20,
+    y: Math.max(20, window.innerHeight - 300)
+  });
+  
+  // 🧲 吸附系统状态
+  const [snapState, setSnapState] = useState<SnapState>(SnapState.Free);
+  const [snappedEdge, setSnappedEdge] = useState<SnapEdge>(SnapEdge.None);
+  const [freePosition, setFreePosition] = useState({ x: 20, y: window.innerHeight - 280 - 20 });
+  
+  // 🎵 播放状态
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(0.6);
+  const [waveformReady, setWaveformReady] = useState(false);
+  const [currentTrack, setCurrentTrack] = useState<AudioTrack | null>(null);
+  const [audioDuration, setAudioDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  
+  // 🎼 音频文件管理
+  const [audioFiles, setAudioFiles] = useState<AudioTrack[]>([]);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  
+  // 📊 V2版本API状态
+  const [isLoading, setIsLoading] = useState(false);
+  const [streamUrl, setStreamUrl] = useState<string | null>(null);
+  
+  // 引用
+  const playerRef = useRef<HTMLDivElement>(null);
+  const waveformRef = useRef<HTMLDivElement>(null);
+  const wavesurferRef = useRef<WaveSurfer | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  
+  // 🕒 自动吸附定时器
+  const [autoSnapTimer, setAutoSnapTimer] = useState<NodeJS.Timeout | null>(null);
+  
+  // 🔄 重连定时器
+  const reconnectTimerRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // 🎵 自动播放准备
+  const autoplayArmedRef = useRef(true);
+  
+  const t = getTranslations(language);
+
+  // ✅ 自适应窗口尺寸（修复UI比例问题）
+  const getPlayerDimensions = useCallback(() => {
+    // 使用视口比例并限制上下界，保证在不同屏幕下比例合理
+    const width = Math.min(420, Math.max(280, Math.round(window.innerWidth * 0.34)));
+    const height = Math.min(340, Math.max(220, Math.round(window.innerHeight * 0.28)));
+    return { width, height };
+  }, []);
+
+  const [playerDims, setPlayerDims] = useState(() => getPlayerDimensions());
+
+  // 🧲 智能边缘检测 - 找到距离最近的边缘
+  const findNearestEdge = useCallback((x: number, y: number) => {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // 仅包含可吸附的四个边（不含 none）
+    type EdgeKey = Exclude<SnapEdge, SnapEdge.None>;
+    const distances: Record<EdgeKey, number> = {
+      left: x,
+      right: viewportWidth - x - playerDims.width,
+      top: y,
+      bottom: viewportHeight - y - playerDims.height
+    };
+
+    // 找到距离最短的边缘
+    const nearestEdge = (Object.keys(distances) as EdgeKey[]).reduce((closest, edge) => {
+      return distances[edge] < distances[closest] ? edge : closest;
+    });
+
+    // 计算吸附位置
+    const snapPositions: Record<EdgeKey, { x: number; y: number }> = {
+      left: { x: 0, y: Math.max(50, Math.min(viewportHeight - 150, y)) },
+      // 右侧吸附：使用20px极窄条，不受组件宽度影响
+      right: { x: viewportWidth - 20, y: Math.max(50, Math.min(viewportHeight - 150, y)) },
+      top: { x: Math.max(50, Math.min(viewportWidth - 150, x)), y: 0 },
+      bottom: { x: Math.max(50, Math.min(viewportWidth - 150, x)), y: viewportHeight - 20 }
+    };
+
+    return {
+      edge: nearestEdge,
+      position: snapPositions[nearestEdge]
+    };
+  }, [playerDims.width, playerDims.height]);
+
+  // 📍 获取展开位置
+  const getExpandedPosition = useCallback(() => {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    switch (snappedEdge) {
+      case SnapEdge.Left:
+        return { x: 20, y: Math.max(20, Math.min(viewportHeight - (playerDims.height + 20), freePosition.y)) };
+      case SnapEdge.Right:
+        return { x: viewportWidth - (playerDims.width + 20), y: Math.max(20, Math.min(viewportHeight - (playerDims.height + 20), freePosition.y)) };
+      case SnapEdge.Top:
+        return { x: Math.max(20, Math.min(viewportWidth - (playerDims.width + 20), freePosition.x)), y: 20 };
+      case SnapEdge.Bottom:
+        return { x: Math.max(20, Math.min(viewportWidth - (playerDims.width + 20), freePosition.x)), y: viewportHeight - (playerDims.height + 20) };
+      default:
+        return freePosition;
+    }
+  }, [snappedEdge, freePosition, playerDims.height, playerDims.width]);
+
+  // 🎯 吸附按钮点击处理
+  const handleSnapToggle = useCallback(() => {
+    switch (snapState) {
+      case SnapState.Free:
+        // 自由状态 → 吸附状态
+        const { edge, position: snapPos } = findNearestEdge(position.x, position.y);
+        setFreePosition(position); // 保存当前自由位置
+        setSnappedEdge(edge);
+        setPosition(snapPos);
+        setSnapState(SnapState.Snapped);
+        console.log(`🧲 吸附到${edge}边缘`);
+        break;
+        
+      case SnapState.Snapped:
+        // 吸附状态 → 展开状态
+        const expandPos = getExpandedPosition();
+        setPosition(expandPos);
+        setSnapState(SnapState.Expanded);
+        console.log(`📖 展开窗口`);
+        break;
+        
+      case SnapState.Expanded:
+        // 展开状态 → 自由状态
+        setPosition(freePosition);
+        setSnappedEdge(SnapEdge.None);
+        setSnapState(SnapState.Free);
+        console.log(`🆓 恢复自由状态`);
+        break;
+    }
+  }, [snapState, position, findNearestEdge, getExpandedPosition, freePosition]);
+
+  // 📏 窗口大小变化处理
+  useEffect(() => {
+    const handleResize = () => {
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      
+      if (snapState === SnapState.Snapped) {
+        // 重新计算吸附位置
+        const { position: newSnapPos } = findNearestEdge(freePosition.x, freePosition.y);
+        setPosition(newSnapPos);
+      } else if (snapState === SnapState.Expanded) {
+        // 重新计算展开位置
+        const newExpandPos = getExpandedPosition();
+        setPosition(newExpandPos);
+      } else {
+        // 自由状态，确保在安全区域内
+        const safeX = Math.max(20, Math.min(windowWidth - (playerDims.width + 20), position.x));
+        const safeY = Math.max(20, Math.min(windowHeight - (playerDims.height + 20), position.y));
+        setPosition({ x: safeX, y: safeY });
+        setFreePosition({ x: safeX, y: safeY });
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [snapState, freePosition, findNearestEdge, getExpandedPosition, position, playerDims.width, playerDims.height]);
+
+  // 🌊 初始化波形显示
+  const initWaveform = useCallback(() => {
+    if (preloadOnly) {
+      // 预载模式下跳过波形UI创建，仅做轻量预热
+      setWaveformReady(true);
+      return;
+    }
+    if (!waveformRef.current || waveformReady) return;
+
+    try {
+      const wavesurfer = WaveSurfer.create({
+        container: waveformRef.current,
+        waveColor: 'var(--silver-primary-60)',
+        progressColor: 'var(--silver-primary-80)',
+        cursorColor: 'rgba(255, 255, 255, 0.8)',
+        barWidth: 2,
+        barRadius: 2,
+        height: 48,
+        normalize: true,
+        interact: false
+      });
+
+      wavesurfer.on('ready', () => {
+        setWaveformReady(true);
+        console.log(`🌊 ${t.radio.waveformReady}`);
+      });
+
+      wavesurferRef.current = wavesurfer;
+      
+      // 模拟加载
+      setTimeout(() => {
+        setWaveformReady(true);
+      }, 500);
+
+    } catch (error) {
+      console.warn(`❌ ${t.radio.waveformError}:`, error);
+      setWaveformReady(true);
+    }
+  }, [waveformReady, t, preloadOnly]);
+
+  // 🎼 V2版本API集成 - 加载歌单
+  const loadPlaylist = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/music/playlist');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && Array.isArray(data.playlist)) {
+          setAudioFiles(data.playlist);
+          if (data.playlist.length > 0) {
+            setCurrentTrack(data.playlist[0]);
+            setCurrentTrackIndex(0);
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('❌ 加载歌单失败，使用测试数据:', error);
+      // 使用测试数据作为后备
+      initTestModeAudioFiles();
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // 🎼 初始化测试模式音频文件
+  const initTestModeAudioFiles = useCallback(() => {
+    const testAudioFiles: AudioTrack[] = [
+      {
+        id: '001',
+        title: 'Shaking Conditions',
+        artist: 'Moodrich, Sketchy',
+        duration: 240,
+        bpm: 128,
+        genre: 'Electronic',
+        path: '/Users/masher/Music/网易云音乐/柔/001. Shaking Conditions - Moodrich, Sketchy.mp3',
+        type: 'test_hardcoded',
+        playCount: 0
+      },
+      {
+        id: '002',
+        title: 'Deep Space Journey',
+        artist: 'Cosmic Explorer',
+        duration: 320,
+        bpm: 120,
+        genre: 'Ambient',
+        path: '/Users/masher/Music/网易云音乐/柔/002. Deep Space Journey - Cosmic Explorer.mp3',
+        type: 'test_hardcoded',
+        playCount: 0
+      },
+      {
+        id: '003',
+        title: 'Neon Dreams',
+        artist: 'Synthwave Collective',
+        duration: 280,
+        bpm: 125,
+        genre: 'Synthwave',
+        path: '/Users/masher/Music/网易云音乐/柔/003. Neon Dreams - Synthwave Collective.mp3',
+        type: 'test_hardcoded',
+        playCount: 0
+      },
+      {
+        id: '004',
+        title: 'Quantum Flow',
+        artist: 'Digital Mind',
+        duration: 300,
+        bpm: 130,
+        genre: 'Techno',
+        path: '/Users/masher/Music/网易云音乐/柔/004. Quantum Flow - Digital Mind.mp3',
+        type: 'test_hardcoded',
+        playCount: 0
+      },
+      {
+        id: '005',
+        title: 'Stellar Wind',
+        artist: 'Space Traveler',
+        duration: 260,
+        bpm: 118,
+        genre: 'Chillout',
+        path: '/Users/masher/Music/网易云音乐/柔/005. Stellar Wind - Space Traveler.mp3',
+        type: 'test_hardcoded',
+        playCount: 0
+      }
+    ];
+    
+    setAudioFiles(testAudioFiles);
+    setCurrentTrack(testAudioFiles[0]);
+    console.log('🎼 测试模式音频文件已加载:', testAudioFiles.length, '首歌曲');
+  }, []);
+
+  // 🎼 V2版本API集成 - 获取播放状态
+  const getPlaybackStatus = useCallback(async () => {
+    try {
+      const response = await fetch('/api/music/status');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setIsPlaying(data.isPlaying || false);
+          setVolume(data.volume || 0.6);
+          setCurrentTime(data.currentTime || 0);
+          setAudioDuration(data.duration || 0);
+        }
+      }
+    } catch (error) {
+      console.warn('❌ 获取播放状态失败:', error);
+    }
+  }, []);
+
+  // 🎼 V2版本API集成 - 播放音乐
+  const playMusic = useCallback(async () => {
+    try {
+      const response = await fetch('/api/music/play', { method: 'POST' });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setIsPlaying(true);
+          console.log('🎵 开始播放');
+          // 通过V2事件系统发射播放事件 - 修复接口错误
+          UnifiedEventBus.emitPlayback('play');
+        }
+      }
+    } catch (error) {
+      console.error('❌ 播放失败:', error);
+    }
+  }, []);
+
+  // 🎼 V2版本API集成 - 暂停音乐
+  const pauseMusic = useCallback(async () => {
+    try {
+      const response = await fetch('/api/music/pause', { method: 'POST' });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setIsPlaying(false);
+          console.log('⏸️ 音乐已暂停');
+          // 通过V2事件系统发射暂停事件 - 修复接口错误
+          UnifiedEventBus.emitPlayback('pause');
+        }
+      }
+    } catch (error) {
+      console.error('❌ 暂停失败:', error);
+    }
+  }, []);
+
+  // 🎼 播放/暂停切换
+  const handlePlayPause = useCallback(async () => {
+    if (isPlaying) {
+      await pauseMusic();
+    } else {
+      await playMusic();
+    }
+  }, [isPlaying, playMusic, pauseMusic]);
+
+  // 🎼 音量控制
+  const handleVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+    
+    if (wavesurferRef.current) {
+      wavesurferRef.current.setVolume(newVolume);
+    }
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
+    }
+    
+    // 同步到服务器
+    fetch(`/api/music/volume?level=${newVolume}`).catch(console.warn);
+  }, []);
+
+  // 🔄 同步按钮
+  const handleSyncToggle = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    onSyncToggle?.();
+    const syncStatus = !syncActive ? t.radio.syncActive : t.radio.syncInactive;
+    console.log(`🔄 ${t.radio.syncButton}: ${syncStatus}`);
+  }, [syncActive, onSyncToggle, t]);
+
+  // 🚪 关闭按钮
+  const handleClose = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClose?.();
+    
+    // 清理资源
+    if (wavesurferRef.current) {
+      wavesurferRef.current.destroy();
+    }
+    if (audioRef.current) {
+      try { audioRef.current.pause(); } catch {}
+      audioRef.current.src = '';
+      audioRef.current = null;
+    }
+    
+    console.log(`🚪 ${t.radio.closePlayer}`);
+  }, [onClose, t]);
+
+  // 初始化
+  useEffect(() => {
+    initWaveform();
+    
+    // 初始化 audio 元素
+    const a = new Audio();
+    a.crossOrigin = 'anonymous';
+    a.preload = 'none';
+    a.volume = volume;
+    
+    // 音频事件监听
+    a.addEventListener('ended', () => {
+      console.log('🎵 当前歌曲播放完毕');
+      // 简化版：不自动下一首，只停止播放
+      setIsPlaying(false);
+    });
+    
+    a.addEventListener('error', (e) => {
+      console.warn('❌ 音频播放错误:', e);
+    });
+    
+    audioRef.current = a;
+    
+    // 订阅播放/暂停
+    const offPlayback = onPlayback((e) => {
+      const s = e.data?.playbackState;
+      if (s === 'play' && !isPlaying) setIsPlaying(true);
+      if (s === 'pause' && isPlaying) setIsPlaying(false);
+      if (s === 'stop') setIsPlaying(false);
+    });
+    
+    // 订阅过渡（简化版：不需要复杂的过渡事件）
+    const offTransition = onTransition((_e) => {
+      console.log('🎚️ Transition received (简化版忽略)');
+    });
+    
+    // 加载歌单和状态
+    loadPlaylist();
+    getPlaybackStatus();
+    
+    // 🕒 进入第二页后自动吸附逻辑：展开10秒后自动吸附
+    console.log('🕒 启动10秒自动吸附定时器');
+    const timer = setTimeout(() => {
+      console.log('🧲 自动执行吸附操作');
+      // 简化的自动吸附逻辑 - 直接执行吸附到左边缘
+      setFreePosition(prev => ({ x: 20, y: window.innerHeight - 280 - 20 }));
+      setSnappedEdge(SnapEdge.Left);
+      setPosition({ x: 0, y: Math.max(50, Math.min(window.innerHeight - 150, 200)) });
+      setSnapState(SnapState.Snapped);
+    }, 10000); // 10秒
+    
+    setAutoSnapTimer(timer);
+    
+    return () => {
+      if (wavesurferRef.current) {
+        wavesurferRef.current.destroy();
+      }
+      if (audioRef.current) {
+        try { audioRef.current.pause(); } catch {}
+        audioRef.current.src = '';
+        audioRef.current = null;
+      }
+      if (reconnectTimerRef.current) { 
+        clearTimeout(reconnectTimerRef.current); 
+        reconnectTimerRef.current = null; 
+      }
+      
+      // 清理定时器
+      clearTimeout(timer);
+      offPlayback();
+      offTransition();
+    };
+  }, [loadPlaylist, getPlaybackStatus, initWaveform, volume]);
+
+  // 首次用户点击后自动尝试播放（满足浏览器手势策略）
+  useEffect(() => {
+    const onFirstUserGesture = async () => {
+      if (!autoplayArmedRef.current) return;
+      autoplayArmedRef.current = false;
+      
+      // 自动播放第一首歌
+      if (audioFiles.length > 0) {
+        await playMusic();
+      }
+    };
+    window.addEventListener('click', onFirstUserGesture, { once: true, capture: true });
+    return () => {
+      try { window.removeEventListener('click', onFirstUserGesture, true as any); } catch {}
+    };
+  }, [playMusic, audioFiles]);
+
+  // 🎨 根据状态决定样式
+  const isMinimized = snapState === SnapState.Snapped;
+  const isExpanded = snapState === SnapState.Expanded;
+  
+  // 计算容器样式
+  const containerStyle = {
+    position: 'fixed' as const,
+    left: position.x,
+    top: position.y,
+    width: isMinimized ? 60 : 360,
+    height: 280,
+    zIndex: 85,
+    cursor: snapState === SnapState.Snapped ? 'pointer' : 'move',
+    userSelect: 'none' as const,
+    touchAction: 'none' as const,
+  };
+
+  // 计算内容样式
+  const contentStyle = {
+    opacity: isMinimized ? 0 : 1,
+    transform: isMinimized ? 'scale(0.8)' : 'scale(1)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  };
+
+  // 计算吸附按钮样式
+  const snapButtonStyle = {
+    position: 'absolute' as const,
+    top: isMinimized ? '50%' : '10px',
+    right: isMinimized ? '50%' : '10px',
+    transform: isMinimized ? 'translate(50%, -50%)' : 'none',
+    width: isMinimized ? 40 : 32,
+    height: isMinimized ? 40 : 32,
+    borderRadius: '50%',
+    background: 'var(--silver-primary-80)',
+    border: '2px solid var(--silver-primary-60)',
+    color: 'var(--silver-primary-20)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    fontSize: isMinimized ? '20px' : '16px',
+    transition: 'all 0.2s ease',
+    zIndex: 10,
+  };
+
+  if (preloadOnly) {
+    return null;
+  }
+
+  return (
+    <motion.div
+      ref={playerRef}
+      style={containerStyle}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+    >
+      {/* 吸附切换按钮 */}
+      <motion.button
+        style={snapButtonStyle}
+        onClick={handleSnapToggle}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        title={isMinimized ? '展开播放器' : '吸附到边缘'}
+      >
+        {isMinimized ? '▶' : '🧲'}
+      </motion.button>
+
+      {/* 主内容区域 */}
+      <motion.div style={contentStyle}>
+        {/* 播放器头部 */}
+        <div className="bg-silver-primary-90/95 backdrop-blur-md border border-silver-primary-60 rounded-t-lg p-3 flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+          </div>
+          <div className="text-silver-primary-20 text-sm font-mono">
+            {isMinimized ? 'RADIO' : 'TIANGONG RADIO'}
+          </div>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={handleSyncToggle}
+              className={`w-6 h-6 rounded-full flex items-center justify-center text-xs transition-colors ${
+                syncActive 
+                  ? 'bg-silver-primary-60 text-silver-primary-20' 
+                  : 'bg-silver-primary-40 text-silver-primary-60'
+              }`}
+              title={syncActive ? '同步已启用' : '同步已禁用'}
+            >
+              🔄
+            </button>
+            <button
+              onClick={handleClose}
+              className="w-6 h-6 rounded-full bg-silver-primary-40 text-silver-primary-60 hover:bg-silver-primary-60 hover:text-silver-primary-20 transition-colors flex items-center justify-center text-xs"
+              title="关闭播放器"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+
+        {/* 播放器主体 */}
+        <div className="bg-silver-primary-95/95 backdrop-blur-md border-x border-b border-silver-primary-60 rounded-b-lg p-4">
+          {/* 当前播放信息 */}
+          {currentTrack && (
+            <div className="mb-4 text-center">
+              <div className="text-silver-primary-20 font-medium text-sm mb-1">
+                {currentTrack.title}
+              </div>
+              {currentTrack.artist && (
+                <div className="text-silver-primary-40 text-xs">
+                  {currentTrack.artist}
+                </div>
+              )}
+              {currentTrack.key && (
+                <div className="text-silver-primary-50 text-xs mt-1">
+                  调性: {currentTrack.key}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 波形显示 */}
+          <div 
+            ref={waveformRef} 
+            className="w-full h-12 bg-silver-primary-90 rounded mb-4 flex items-center justify-center"
+          >
+            {!waveformReady && (
+              <div className="text-silver-primary-40 text-xs">加载波形...</div>
+            )}
+          </div>
+
+          {/* 播放控制 - 简化版：只有播放/暂停按钮 */}
+          <div className="flex items-center justify-center mb-4">
+            <button
+              onClick={handlePlayPause}
+              className="w-16 h-16 rounded-full bg-silver-primary-60 text-silver-primary-20 hover:bg-silver-primary-80 transition-colors flex items-center justify-center text-xl"
+              title={isPlaying ? '暂停' : '播放'}
+            >
+              {isPlaying ? '⏸️' : '▶️'}
+            </button>
+          </div>
+
+          {/* 音量控制 */}
+          <div className="flex items-center space-x-2">
+            <span className="text-silver-primary-40 text-xs">🔊</span>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.1"
+              value={volume}
+              onChange={handleVolumeChange}
+              className="flex-1 h-2 bg-silver-primary-80 rounded-lg appearance-none cursor-pointer slider"
+              title={`音量: ${Math.round(volume * 100)}%`}
+            />
+            <div className="text-silver-primary-60 font-mono text-xs min-w-[28px] text-right">
+              {Math.round(volume * 100)}%
+            </div>
+          </div>
+
+          {/* 播放列表信息 */}
+          {audioFiles.length > 0 && (
+            <div className="mt-4 text-center">
+              <div className="text-silver-primary-40 text-xs">
+                歌单: {currentTrackIndex + 1} / {audioFiles.length}
+              </div>
+              <div className="text-silver-primary-30 text-xs mt-1">
+                {audioFiles[currentTrackIndex]?.title || '未选择歌曲'}
+              </div>
+            </div>
+          )}
+
+          {/* 加载状态 */}
+          {isLoading && (
+            <div className="mt-4 text-center">
+              <div className="text-silver-primary-40 text-xs">加载中...</div>
+            </div>
+          )}
+        </div>
+      </motion.div>
+
+      {/* 自定义滑块样式 */}
+      <style jsx>{`
+        .slider::-webkit-slider-thumb {
+          appearance: none;
+          height: 16px;
+          width: 16px;
+          border-radius: 50%;
+          background: var(--silver-primary-60);
+          cursor: pointer;
+          border: 2px solid var(--silver-primary-80);
+        }
+        
+        .slider::-moz-range-thumb {
+          height: 16px;
+          width: 16px;
+          border-radius: 50%;
+          background: var(--silver-primary-60);
+          border: 2px solid var(--silver-primary-80);
+        }
+      `}</style>
+    </motion.div>
+  );
+};

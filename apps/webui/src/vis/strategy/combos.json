@@ -1,0 +1,582 @@
+[
+  {
+    "id": "A1",
+    "class": "stable",
+    "nodes": [
+      {
+        "id": "LumaSoftOverlay",
+        "w": 0.12
+      },
+      {
+        "id": "StructureMix",
+        "w": 0.12,
+        "u": {
+          "uLicStrength": 0.3
+        }
+      }
+    ],
+    "extras": {},
+    "notes": ""
+  },
+  {
+    "id": "A2",
+    "class": "stable",
+    "nodes": [
+      {
+        "id": "SMix",
+        "w": 0.12
+      },
+      {
+        "id": "OkLabLightness",
+        "w": 0.1
+      },
+      {
+        "id": "GrainMerge",
+        "w": 0.06
+      }
+    ],
+    "extras": {},
+    "notes": "银面柔和+去带状"
+  },
+  {
+    "id": "A3",
+    "class": "stable",
+    "nodes": [
+      {
+        "id": "DualCurve",
+        "w": 0.08
+      },
+      {
+        "id": "SpecularGrad",
+        "w": 0.07
+      },
+      {
+        "id": "GrainMerge",
+        "w": 0.04
+      }
+    ],
+    "extras": {},
+    "notes": "轻拉丝+镜面点光"
+  },
+  {
+    "id": "A4",
+    "class": "stable",
+    "nodes": [
+      {
+        "id": "StructureMix",
+        "w": 0.12,
+        "u": {
+          "uLicStrength": 0.5
+        }
+      },
+      {
+        "id": "GrainMerge",
+        "w": 0.06
+      }
+    ],
+    "extras": {
+      "texture": {
+        "id": "Worley",
+        "uniforms": {
+          "cellSharp": 0.6
+        }
+      }
+    },
+    "notes": "微裂纹作结构"
+  },
+  {
+    "id": "A5",
+    "class": "stable",
+    "nodes": [
+      {
+        "id": "SMix",
+        "w": 0.1
+      },
+      {
+        "id": "OkLabLightness",
+        "w": 0.1
+      }
+    ],
+    "extras": {
+      "pattern": {
+        "id": "ReactionDiffusion",
+        "uniforms": {
+          "rdF": 0.04,
+          "rdK": 0.065
+        }
+      }
+    },
+    "notes": "低频呼吸"
+  },
+  {
+    "id": "B1",
+    "class": "build",
+    "nodes": [
+      {
+        "id": "StructureMix",
+        "w": 0.12,
+        "u": {
+          "uFlowRadius": 0.7
+        }
+      },
+      {
+        "id": "DualCurve",
+        "w": 0.1
+      }
+    ],
+    "extras": {
+      "flow": {
+        "id": "CurlNoise",
+        "uniforms": {
+          "flowAmp": 0.03,
+          "flowScale": 1.1
+        }
+      }
+    },
+    "notes": "逐渐紧张"
+  },
+  {
+    "id": "B2",
+    "class": "build",
+    "nodes": [
+      {
+        "id": "SMix",
+        "w": 0.12
+      },
+      {
+        "id": "GrainMerge",
+        "w": 0.06
+      },
+      {
+        "id": "BloomHL",
+        "w": 0.06
+      }
+    ],
+    "extras": {},
+    "notes": "轻 Bloom 预热"
+  },
+  {
+    "id": "B3",
+    "class": "build",
+    "nodes": [
+      {
+        "id": "BoundedDodge",
+        "w": 0.12
+      },
+      {
+        "id": "StructureMix",
+        "w": 0.1
+      }
+    ],
+    "extras": {
+      "texture": {
+        "id": "Worley",
+        "uniforms": {
+          "cellSharp": 0.7
+        }
+      }
+    },
+    "notes": "裂纹增强"
+  },
+  {
+    "id": "B4",
+    "class": "build",
+    "nodes": [
+      {
+        "id": "DualCurve",
+        "w": 0.1
+      },
+      {
+        "id": "StructureMix",
+        "w": 0.1
+      }
+    ],
+    "extras": {
+      "flow": {
+        "id": "CurlNoise",
+        "uniforms": {
+          "flowAmp": 0.04
+        }
+      }
+    },
+    "notes": "曲线+流动"
+  },
+  {
+    "id": "B5",
+    "class": "build",
+    "nodes": [
+      {
+        "id": "SpecularGrad",
+        "w": 0.08
+      },
+      {
+        "id": "EdgeTint",
+        "w": 0.06
+      }
+    ],
+    "extras": {},
+    "notes": "光向变化+冷色边缘"
+  },
+  {
+    "id": "C1",
+    "class": "drop",
+    "nodes": [
+      {
+        "id": "BoundedDodge",
+        "w": 0.16
+      },
+      {
+        "id": "BloomHL",
+        "w": 0.12
+      }
+    ],
+    "extras": {},
+    "notes": "银面爆亮"
+  },
+  {
+    "id": "C2",
+    "class": "drop",
+    "nodes": [
+      {
+        "id": "DualCurve",
+        "w": 0.14
+      },
+      {
+        "id": "EdgeTint",
+        "w": 0.08
+      },
+      {
+        "id": "SpecularGrad",
+        "w": 0.06
+      }
+    ],
+    "extras": {},
+    "notes": "锐利+冷边"
+  },
+  {
+    "id": "C3",
+    "class": "drop",
+    "nodes": [
+      {
+        "id": "SoftBurn",
+        "w": 0.12
+      },
+      {
+        "id": "SpecularGrad",
+        "w": 0.1
+      },
+      {
+        "id": "GrainMerge",
+        "w": 0.06
+      }
+    ],
+    "extras": {},
+    "notes": "烧痕+镜面高光"
+  },
+  {
+    "id": "C4",
+    "class": "drop",
+    "nodes": [
+      {
+        "id": "StructureMix",
+        "w": 0.12
+      },
+      {
+        "id": "BoundedDodge",
+        "w": 0.12
+      }
+    ],
+    "extras": {
+      "flow": {
+        "id": "CurlNoise",
+        "uniforms": {
+          "flowAmp": 0.06
+        }
+      }
+    },
+    "notes": "强流动位移"
+  },
+  {
+    "id": "C5",
+    "class": "drop",
+    "nodes": [
+      {
+        "id": "GrainMerge",
+        "w": 0.06
+      },
+      {
+        "id": "BloomHL",
+        "w": 0.12
+      },
+      {
+        "id": "DualCurve",
+        "w": 0.1
+      }
+    ],
+    "extras": {},
+    "notes": ""
+  },
+  {
+    "id": "D1",
+    "class": "fill",
+    "nodes": [
+      {
+        "id": "GrainMerge",
+        "w": 0.08
+      },
+      {
+        "id": "StructureMix",
+        "w": 0.08
+      }
+    ],
+    "extras": {
+      "flow": {
+        "id": "CurlNoise",
+        "uniforms": {
+          "flowAmp": 0.02
+        }
+      }
+    },
+    "notes": ""
+  },
+  {
+    "id": "D2",
+    "class": "fill",
+    "nodes": [
+      {
+        "id": "StructureMix",
+        "w": 0.1
+      }
+    ],
+    "extras": {},
+    "notes": "Logistic 驱动半径（由微策略注入）"
+  },
+  {
+    "id": "D3",
+    "class": "fill",
+    "nodes": [
+      {
+        "id": "OkLabLightness",
+        "w": 0.1
+      },
+      {
+        "id": "Aniso?",
+        "w": 0.0
+      }
+    ],
+    "extras": {},
+    "notes": "拉丝属于新视觉，作为纹理源接入"
+  },
+  {
+    "id": "D4",
+    "class": "fill",
+    "nodes": [
+      {
+        "id": "SoftBurn",
+        "w": 0.1
+      }
+    ],
+    "extras": {
+      "pattern": {
+        "id": "ReactionDiffusion",
+        "uniforms": {
+          "rdF": 0.045,
+          "rdK": 0.061
+        }
+      }
+    },
+    "notes": ""
+  },
+  {
+    "id": "D5",
+    "class": "fill",
+    "nodes": [
+      {
+        "id": "TemporalTrail",
+        "w": 0.1
+      },
+      {
+        "id": "StructureMix",
+        "w": 0.08
+      }
+    ],
+    "extras": {
+      "texture": {
+        "id": "Worley",
+        "uniforms": {
+          "cellSharp": 0.65
+        }
+      }
+    },
+    "notes": ""
+  },
+  {
+    "id": "E1",
+    "class": "ambient",
+    "nodes": [
+      {
+        "id": "SMix",
+        "w": 0.12
+      }
+    ],
+    "extras": {
+      "pattern": {
+        "id": "ReactionDiffusion",
+        "uniforms": {
+          "rdF": 0.04,
+          "rdK": 0.063
+        }
+      }
+    },
+    "notes": ""
+  },
+  {
+    "id": "E2",
+    "class": "ambient",
+    "nodes": [
+      {
+        "id": "OkLabLightness",
+        "w": 0.1
+      }
+    ],
+    "extras": {
+      "pattern": {
+        "id": "Lenia",
+        "uniforms": {
+          "leniaR": 0.1,
+          "leniaBeta": 2.0
+        }
+      }
+    },
+    "notes": ""
+  },
+  {
+    "id": "E3",
+    "class": "ambient",
+    "nodes": [
+      {
+        "id": "GrainMerge",
+        "w": 0.08
+      }
+    ],
+    "extras": {},
+    "notes": "低频颗粒"
+  },
+  {
+    "id": "E4",
+    "class": "ambient",
+    "nodes": [
+      {
+        "id": "StructureMix",
+        "w": 0.08
+      }
+    ],
+    "extras": {
+      "flow": {
+        "id": "CurlNoise",
+        "uniforms": {
+          "flowAmp": 0.015
+        }
+      }
+    },
+    "notes": ""
+  },
+  {
+    "id": "E5",
+    "class": "ambient",
+    "nodes": [
+      {
+        "id": "TemporalTrail",
+        "w": 0.08
+      },
+      {
+        "id": "GrainMerge",
+        "w": 0.06
+      }
+    ],
+    "extras": {},
+    "notes": ""
+  },
+  {
+    "id": "F1",
+    "class": "experimental",
+    "nodes": [
+      {
+        "id": "EdgeTint",
+        "w": 0.06
+      },
+      {
+        "id": "Reaction?",
+        "w": 0.0
+      }
+    ],
+    "extras": {},
+    "notes": "RD/Lenia 走蒙版"
+  },
+  {
+    "id": "F2",
+    "class": "experimental",
+    "nodes": [
+      {
+        "id": "DualCurve",
+        "w": 0.1
+      }
+    ],
+    "extras": {
+      "flow": {
+        "id": "CurlNoise",
+        "uniforms": {
+          "flowAmp": 0.03
+        }
+      }
+    },
+    "notes": ""
+  },
+  {
+    "id": "F3",
+    "class": "experimental",
+    "nodes": [
+      {
+        "id": "SpecularGrad",
+        "w": 0.1
+      }
+    ],
+    "extras": {
+      "texture": {
+        "id": "Worley",
+        "uniforms": {
+          "cellSharp": 0.75
+        }
+      }
+    },
+    "notes": ""
+  },
+  {
+    "id": "F4",
+    "class": "experimental",
+    "nodes": [
+      {
+        "id": "GrainMerge",
+        "w": 0.06
+      }
+    ],
+    "extras": {},
+    "notes": "Poisson 触发短闪（由微策略）"
+  },
+  {
+    "id": "F5",
+    "class": "experimental",
+    "nodes": [
+      {
+        "id": "DualCurve",
+        "w": 0.1
+      },
+      {
+        "id": "TemporalTrail",
+        "w": 0.08
+      }
+    ],
+    "extras": {},
+    "notes": "相位游走"
+  }
+]

@@ -1,0 +1,61 @@
+{
+  "name": "tiangong-tech-visual-app",
+  "version": "2.3.0",
+  "description": "天宫科技全屏视觉体验应用 - 银色主题Shadertoy动画与音乐整理功能",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "clean": "rm -rf dist .vite node_modules/.vite",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "motion": "^10.18.0",
+    "lucide-react": "^0.400.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "webgl",
+    "shader",
+    "music-organizer",
+    "glass-morphism",
+    "tiangong-tech"
+  ],
+  "author": "麻蛇",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tiangong-tech/visual-experience-app"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

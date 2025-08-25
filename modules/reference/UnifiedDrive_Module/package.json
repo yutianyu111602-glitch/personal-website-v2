@@ -1,0 +1,12 @@
+{
+  "name": "unified-drive",
+  "version": "1.0.0",
+  "type": "module",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p .",
+    "check": "tsc -p . --noEmit"
+  }
+}

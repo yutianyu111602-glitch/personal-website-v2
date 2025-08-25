@@ -1,0 +1,14 @@
+{
+  "name": "music-visualizer-focus-toggle",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port $VITE_PORT",
+    "build": "vite build",
+    "preview": "vite preview --port $VITE_PORT"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}

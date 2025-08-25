@@ -1,0 +1,105 @@
+{
+  "project": "个人网站项目V2",
+  "version": "2.0.0",
+  "analysis": {
+    "scope": {
+      "includePatterns": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js", 
+        "**/*.jsx",
+        "**/*.json",
+        "**/*.md"
+      ],
+      "excludePatterns": [
+        "**/node_modules/**",
+        "**/build/**",
+        "**/dist/**",
+        "**/*.log",
+        "**/backups/**"
+      ],
+      "focusAreas": [
+        "port-configuration",
+        "type-definitions", 
+        "import-paths",
+        "event-system",
+        "state-management",
+        "performance-optimization",
+        "memory-leaks",
+        "security-vulnerabilities"
+      ]
+    },
+    "priority": {
+      "critical": [
+        "port-conflicts",
+        "type-errors",
+        "import-failures",
+        "runtime-errors"
+      ],
+      "high": [
+        "performance-issues",
+        "memory-leaks",
+        "security-issues",
+        "logic-errors"
+      ],
+      "medium": [
+        "code-style",
+        "best-practices",
+        "maintainability"
+      ],
+      "low": [
+        "documentation",
+        "comments",
+        "naming-conventions"
+      ]
+    }
+  },
+  "rules": {
+    "typescript": {
+      "strict": true,
+      "noImplicitAny": true,
+      "strictNullChecks": true,
+      "strictFunctionTypes": true
+    },
+    "react": {
+      "hooks": true,
+      "performance": true,
+      "accessibility": true
+    },
+    "performance": {
+      "memory-leaks": true,
+      "rendering-optimization": true,
+      "bundle-size": true
+    },
+    "security": {
+      "xss": true,
+      "injection": true,
+      "authentication": true
+    }
+  },
+  "targets": {
+    "files": [
+      "apps/webui/src/App.tsx",
+      "apps/webui/src/core/EmotionCoreManager.ts",
+      "apps/webui/src/core/ManagerRegistry.ts",
+      "apps/webui/src/components/events/UnifiedEventBus.ts",
+      "apps/webui/src/components/BackgroundManager.tsx",
+      "config/main_config.json",
+      "apps/webui/vite.config.ts",
+      "apps/webui/tsconfig.json"
+    ],
+    "directories": [
+      "apps/webui/src/core/",
+      "apps/webui/src/components/",
+      "apps/webui/src/types/",
+      "config/"
+    ]
+  },
+  "output": {
+    "format": "markdown",
+    "file": "docs/BUGBOT_ANALYSIS_REPORT.md",
+    "includeCodeSnippets": true,
+    "includeFixSuggestions": true,
+    "includePerformanceMetrics": true
+  }
+}

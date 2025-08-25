@@ -1,0 +1,15 @@
+/* 全局Sass变量（端口规范与颜色体系对齐设计规范） */
+
+// 颜色系统（与 个人网站_颜色与字体规范.md 对齐）
+$accent: #ce9178;
+$accent-strong: #d18616;
+$success: #4ec9b0;
+$error: #f44747;
+
+// 字体
+$font-heading: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-body: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-mono: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+$font-chinese: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+
+

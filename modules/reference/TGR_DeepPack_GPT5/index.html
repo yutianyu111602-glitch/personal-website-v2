@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TGR DeepPack (GPT‑5 Thinking)</title>
+  <style>
+    html,body,#app{height:100%;margin:0;background:#0a0b0d;color:#cfd2d7;font-family:ui-sans-serif,system-ui}
+    .hud{position:fixed;top:10px;left:10px;background:rgba(0,0,0,.35);padding:8px 10px;border-radius:8px;font-size:12px}
+    .dock{position:fixed;bottom:12px;left:12px;display:flex;gap:8px}
+    .btn{background:#1a1b1e;color:#d7d9de;border:1px solid #2a2b30;padding:6px 10px;border-radius:8px;cursor:pointer}
+    .btn:hover{background:#26272b}
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div class="dock">
+    <button id="btnLow" class="btn">低能</button>
+    <button id="btnMid" class="btn">中能</button>
+    <button id="btnHigh" class="btn">高能</button>
+    <button id="btnShuffle" class="btn">抽卡</button>
+  </div>
+  <div class="hud" id="hud">FPS: --</div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

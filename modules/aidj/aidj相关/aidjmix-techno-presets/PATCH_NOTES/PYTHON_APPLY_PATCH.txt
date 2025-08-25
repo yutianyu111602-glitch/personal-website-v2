@@ -1,0 +1,16 @@
+# 修改 cli.py：新增 --preset 与 --simple_head_tail
+# 在 argparse 后：
+# ap.add_argument("--preset", type=str, default="classic", help="Techno 预设：deep_minimal/classic/peak_warehouse/hard_techno/hypnotic")
+# ap.add_argument("--simple_head_tail", action="store_true", help="仅头尾相接（更简单的过渡）")
+
+# 在解析后，调用：
+#   from .presets import apply_preset
+#   apply_preset(args.preset)
+# 在 plan_transitions 调用时：
+#   plan = plan_transitions(seq, techno=bool(args.techno), simple_head_tail=args.simple_head_tail)
+
+
+# 修改 transitions.py 的 plan_transitions 签名：
+# def plan_transitions(seq: List[TrackFeature], techno: bool=True, simple_head_tail: bool=False) -> TransitionPlan:
+# 在生成 item 时：如果 simple_head_tail 为 True，则只设置 startAt/crossfadeBeats，不加入滤波自动化；
+# 否则维持原来的 hipass_ramp 建议。

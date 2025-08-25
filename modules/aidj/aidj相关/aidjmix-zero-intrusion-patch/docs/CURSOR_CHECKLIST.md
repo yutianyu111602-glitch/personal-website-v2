@@ -1,0 +1,11 @@
+# Cursor Checklist
+- [ ] 复制本补丁的 `src/adapter/*.ts` 与 `src/types/contracts.ts` 到前端工程
+- [ ] 在入口处初始化：EmotionTechniqueBridge + AutoMixRouterAdapter（NowPlayingMirror 可选）
+- [ ] 将 ENDPOINT_* 按实际后端路径填写（保留 https / 相对路径均可）
+- [ ] UI 端：未手动选择时，默认采用 technique_recommend 的 technique
+- [ ] 验证：
+  - [ ] 播放时 500ms tick 不受影响（AutoMixManager）
+  - [ ] 5s nowplaying 拉取与 Mirror 不重复（二选一）
+  - [ ] `transition` 事件触发后端 `/next` 正常
+  - [ ] 推荐的 reason[] 在 UI 可见
+  - [ ] 关闭 enable 即可回退
