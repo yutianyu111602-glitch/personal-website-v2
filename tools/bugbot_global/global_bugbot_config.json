@@ -1,0 +1,158 @@
+{
+  "global": {
+    "name": "Code Workspace BugBot 全局配置",
+    "version": "2.0.0",
+    "description": "整个code工作区的BugBot测试配置",
+    "created_at": "2025-08-26",
+    "auto_execution": {
+      "enabled": true,
+      "schedule": "daily",
+      "time": "09:00",
+      "projects": "auto-detect"
+    }
+  },
+  "projects": {
+    "个人网站项目V2": {
+      "path": "程序集_Programs/个人网站项目V2",
+      "enabled": true,
+      "priority": "high",
+      "test_frequency": "weekly",
+      "last_test": null
+    },
+    "LiquidMetal_AlgoBoost": {
+      "path": "LiquidMetal_AlgoBoost",
+      "enabled": true,
+      "priority": "medium",
+      "test_frequency": "monthly",
+      "last_test": null
+    },
+    "TGR_FullStack_VisualSuite": {
+      "path": "TGR_FullStack_VisualSuite",
+      "enabled": true,
+      "priority": "medium",
+      "test_frequency": "monthly",
+      "last_test": null
+    },
+    "webuiv4_personal_website": {
+      "path": "webuiv4_personal_website",
+      "enabled": true,
+      "priority": "high",
+      "test_frequency": "weekly",
+      "last_test": null
+    },
+    "ai团队": {
+      "path": "ai团队",
+      "enabled": true,
+      "priority": "low",
+      "test_frequency": "monthly",
+      "last_test": null
+    }
+  },
+  "analysis": {
+    "scope": {
+      "includePatterns": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js",
+        "**/*.jsx",
+        "**/*.py",
+        "**/*.json",
+        "**/*.md",
+        "**/*.sh"
+      ],
+      "excludePatterns": [
+        "**/node_modules/**",
+        "**/build/**",
+        "**/dist/**",
+        "**/*.log",
+        "**/backups/**",
+        "**/cache/**",
+        "**/venv/**",
+        "**/.git/**"
+      ],
+      "focusAreas": [
+        "port-configuration",
+        "type-definitions",
+        "import-paths",
+        "event-system",
+        "state-management",
+        "performance-optimization",
+        "memory-leaks",
+        "security-vulnerabilities",
+        "code-style",
+        "best-practices"
+      ]
+    },
+    "priority": {
+      "critical": [
+        "port-conflicts",
+        "type-errors",
+        "import-failures",
+        "runtime-errors",
+        "security-vulnerabilities"
+      ],
+      "high": [
+        "performance-issues",
+        "memory-leaks",
+        "logic-errors",
+        "build-failures"
+      ],
+      "medium": [
+        "code-style",
+        "best-practices",
+        "maintainability",
+        "documentation"
+      ],
+      "low": [
+        "comments",
+        "naming-conventions",
+        "formatting"
+      ]
+    }
+  },
+  "automation": {
+    "auto_detect_projects": true,
+    "auto_create_test_files": true,
+    "auto_commit_changes": true,
+    "auto_push_branches": true,
+    "auto_create_prs": false,
+    "notifications": {
+      "enabled": true,
+      "methods": ["log", "email"],
+      "email": "user@example.com"
+    }
+  },
+  "testing": {
+    "test_examples": {
+      "python": {
+        "enabled": true,
+        "file": "bugbot_test_examples/python_example.py",
+        "problem_count": 22
+      },
+      "javascript": {
+        "enabled": true,
+        "file": "bugbot_test_examples/javascript_example.js",
+        "problem_count": 23
+      },
+      "typescript": {
+        "enabled": true,
+        "file": "bugbot_test_examples/typescript_example.ts",
+        "problem_count": 30
+      },
+      "react": {
+        "enabled": true,
+        "file": "bugbot_test_examples/react_example.tsx",
+        "problem_count": 20
+      }
+    },
+    "scheduling": {
+      "mode": "smart",
+      "smart_rules": {
+        "high_priority_projects": "weekly",
+        "medium_priority_projects": "bi-weekly",
+        "low_priority_projects": "monthly",
+        "recently_modified": "within_3_days"
+      }
+    }
+  }
+}
